@@ -247,14 +247,14 @@ var makeImg = function(rgba, ord) {
   var imagePs = particles.vertices.slice(0, rgba.length);
   var outerPs = particles.vertices.slice(rgba.length, pCount);
 
-  morphImageParticles(imagePs, rgba);
-  morphOuterParticles(outerPs, ord);
+  // morphImageParticles(imagePs, rgba);
+  // morphOuterParticles(outerPs, ord);
 
   $( "#click" ).click(function() {
 
     // move(particle);
-    // morphImageParticles(imagePs, rgba);
-    // morphOuterParticles(outerPs, ord);
+    morphImageParticles(imagePs, rgba);
+    morphOuterParticles(outerPs, ord);
 
   });
 
