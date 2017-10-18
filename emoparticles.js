@@ -11,37 +11,40 @@ var WIDTH = window.innerWidth,
 
 var VIEW_ANGLE = 45,
     ASPECT = WIDTH / HEIGHT,
-    NEAR = 0.01,
+    NEAR = 100,
     FAR = 10000;
 
 var $container = $("#container");
 var renderer = new THREE.WebGLRenderer();
-var camera = new THREE.PerspectiveCamera(
-  VIEW_ANGLE,
-  ASPECT,
-  NEAR,
-  FAR);
+// var camera = new THREE.PerspectiveCamera(
+//   VIEW_ANGLE,
+//   ASPECT,
+//   NEAR,
+//   FAR);
 
+var camera = new THREE.PerspectiveCamera(60,WIDTH/HEIGHT, 1,10000 );
+            camera.position.z = 500;
 var scene = new THREE.Scene();
+
 scene.add(camera);
-camera.position.z = 1000;
 renderer.setSize(WIDTH, HEIGHT);
 $container.append(renderer.domElement);
 
-var particleCount = 79627,
+var particleCount = 82209,
     particles = new THREE.Geometry();
 
 var pMaterial = new THREE.PointsMaterial({
-  size: 10,
-  map: new THREE.TextureLoader().load("images/particle.png"),
+  size: 4,
+  map: new THREE.TextureLoader().load("images/particle2.png"),
   blending: THREE.AdditiveBlending,
   transparent: true
 });
 
+
 for (var i = 0; i < particleCount; i++) {
-  var x = Math.random() * 1600 - 800;
-  var y = getRandomInt(600, 1500)
-  var z = Math.random() * 30 - 15;
+  var x = Math.random() * WIDTH/2;
+  var y = getRandomInt((HEIGHT/3), 2*(HEIGHT/3))
+  var z = (Math.random() * 30-15);
   var particle = new THREE.Vector3(x, y, z);
   particle.updated = 0;
   particles.vertices.push(particle);
@@ -67,13 +70,19 @@ function drawImage(imageObj, array) {
       var green = data[((imageWidth * y) + x) * 4 + 1];
       var blue = data[((imageWidth * y) + x) * 4 + 2];
       var alpha = data[((imageWidth * y) + x) * 4 + 3];
-      if (red < 100) {
+      // console.log(alpha)
+      if (alpha > 250) {
+        // var pX = x%500 - (WIDTH/4);
+        // var pY = (HEIGHT/4) - y;
+        // var pX = x
+        // var pY = (HEIGHT/4)-y;
         var pX = (x % 500) - 249;
         var pY = 249 - y;
-        array.push([pX, pY, red, green, blue, alpha]);
+        array.push([pX, pY, red, blue,green, alpha]);
       }
     }
   }
+  console.log(array)
 };
 
 var addDestination = function(particle, x, y, z) {
@@ -164,8 +173,8 @@ var disperse = function() {
     if (typeof(particle.destination) === "undefined") {
       var nums = [-1, 1];
       var x = particle.x + nums[Math.round(Math.random())];
-      var y = particle.y - 1000;
-      var z = Math.random() * 30 - 15;
+      var y = particle.y - Math.random()*1000;
+      var z = 15-(Math.random() * 30);
       addDestination(particle, x, y, z);
       particle.velocity = new THREE.Vector3(x - particle.x, -3, z - particle.z);
     }
@@ -306,7 +315,6 @@ var img1 = new Image();
 // var img3 = new Image();
 img1.onload = function() {
   drawImage(this, fRgba);
-
   // img2.onload = function() {
   //   drawImage(this, sRgba);
   //
@@ -318,5 +326,5 @@ img1.onload = function() {
   // img2.src = "images/gun.jpg";
   // update();
 }
-img1.src = "images/gun.jpg";
+img1.src = "images/gun2.png";
 update();
